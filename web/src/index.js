@@ -9,7 +9,7 @@ import _isPlainObject from 'lodash/isPlainObject';
 
 import {
   ConfigStoreContext, ClusteringStoreContext, FileDataStoreContext, LayoutStoreContext, UiStoreContext, VisualizationStoreContext, QueryStringStoreContext, WebworkerStoreContext
-} from 'store/stores';
+} from 'web/src/store/stores';
 import VOSviewerApp from './VOSviewerApp';
 import DimensionsApp from './DimensionsApp';
 import ZetaAlphaApp from './ZetaAlphaApp';
