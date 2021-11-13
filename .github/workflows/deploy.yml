@@ -19,14 +19,13 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.7'
-
       - name: Deploy API
         uses: google-github-actions/deploy-cloud-functions@v0.4.0
         with:
-            name: bibvis
+            name: bibvis-api
+            region: europe-west2
             runtime: python37
             source_dir: ./api
-            service_account_email:
             credentials: ${{ secrets.GCLOUD }}
       - run: npm ci
       - run: npm run build
