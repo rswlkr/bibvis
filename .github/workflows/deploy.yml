@@ -25,10 +25,10 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./web
-      - run: cd ../api
       - name: Deploy API
         uses: google-github-actions/deploy-cloud-functions@main
         with:
           name: bibvis-api
           runtime: python37
+          source_dir: ./api
           credentials: ${{ secrets.FIREBASE_TOKEN }}
