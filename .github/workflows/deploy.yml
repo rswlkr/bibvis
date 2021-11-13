@@ -16,6 +16,13 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
+      - name: Deploy API
+          uses: google-github-actions/deploy-cloud-functions@main
+          with:
+            name: bibvis-api
+            runtime: python37
+            source_dir: ./api
+            credentials: ${{ secrets.FIREBASE_TOKEN }}
       - run: npm ci
       - run: npm run build
       - name: Deploy Web
@@ -25,10 +32,3 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_PATH: ./web
-      - name: Deploy API
-        uses: google-github-actions/deploy-cloud-functions@main
-        with:
-          name: bibvis-api
-          runtime: python37
-          source_dir: ./api
-          credentials: ${{ secrets.FIREBASE_TOKEN }}
