@@ -22,7 +22,7 @@ jobs:
             name: bibvis-api
             runtime: python37
             source_dir: ./api
-            credentials: ${{ secrets.FIREBASE_TOKEN }}
+            credentials: ${{ secrets.GCLOUD }}
       - run: npm ci
       - run: npm run build
       - name: Deploy Web
