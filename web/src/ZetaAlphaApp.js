@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import { parseQueryString } from 'web/src/utils/helpers';
+import { parseQueryString } from 'utils/helpers';
 import ZetaAlpha from './pages/ZetaAlpha';
 
 const ZetaAlphaApp = () => (
