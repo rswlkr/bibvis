@@ -27,9 +27,8 @@ jobs:
           PROJECT_PATH: ./web
       - run: cd ../api
       - name: Deploy API
-        uses: w9jds/firebase-action@v1.5.0
+        uses: google-github-actions/deploy-cloud-functions@main
         with:
-          args: deploy --only function
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_PATH: ./web
+          name: bibvis-api
+          runtime: python3.7
+          credentials: ${{ secrets.FIREBASE_TOKEN }}
