@@ -16,13 +16,15 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
+      with:
+        service_account_key: ${{ secrets.GCLOUD }}
+        export_default_credentials: true
       - name: Deploy API
         uses: google-github-actions/deploy-cloud-functions@v0.4.0
         with:
             name: bibvis-api
             runtime: python37
             source_dir: ./api
-            credentials: ${{ secrets.GCLOUD }}
       - run: npm ci
       - run: npm run build
       - name: Deploy Web
