@@ -9,7 +9,7 @@ import pandas as pd
 import os
 
 config['Authentication']['APIKey'] = os.environ.get("scopusApiKey")
-
+print(os.environ.get("scopusApiKey"))
 print(config['Authentication']['APIKey'])
 from pybliometrics.scopus import AbstractRetrieval, ScopusSearch, CitationOverview
 
