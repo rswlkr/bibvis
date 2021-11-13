@@ -30,5 +30,5 @@ jobs:
         uses: google-github-actions/deploy-cloud-functions@main
         with:
           name: bibvis-api
-          runtime: python3.7
+          runtime: python37
           credentials: ${{ secrets.FIREBASE_TOKEN }}
