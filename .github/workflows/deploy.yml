@@ -23,7 +23,7 @@ jobs:
       - name: Deploy API
         uses: google-github-actions/deploy-cloud-functions@v0.4.0
         with:
-            name: bibvis-api
+            name: bibvis
             runtime: python37
             source_dir: ./api
             service_account_email:
