@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.7'
       - run: echo $BIBCONFIG
-      - run: 'echo "$BIBCONFIG" >> ../api/config.ini'
+      - run: echo $BIBCONFIG >> ../api/config.ini
       - name: Deploy API
         uses: google-github-actions/deploy-cloud-functions@v0.4.0
         with:
