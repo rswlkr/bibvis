@@ -3,13 +3,13 @@ from thefuzz import fuzz
 import bibtexparser
 from scholarly import scholarly, ProxyGenerator
 import json
+os.environ['PYB_CONFIG_FILE'] = "./config.ini"
 from pybliometrics.scopus.utils import config
 from nanoid import generate
 import pandas as pd
 import os
 
-config['Authentication']['APIKey'] = os.environ.get("scopusApiKey")
-print(os.environ.get("scopusApiKey"))
+
 print(config['Authentication']['APIKey'])
 from pybliometrics.scopus import AbstractRetrieval, ScopusSearch, CitationOverview
 
