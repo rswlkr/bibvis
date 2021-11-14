@@ -3,11 +3,11 @@ from thefuzz import fuzz
 import bibtexparser
 from scholarly import scholarly, ProxyGenerator
 import json
+import os
 os.environ['PYB_CONFIG_FILE'] = "./config.ini"
 from pybliometrics.scopus.utils import config
 from nanoid import generate
 import pandas as pd
-import os
 
 
 print(config['Authentication']['APIKey'])
