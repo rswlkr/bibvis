@@ -13,23 +13,6 @@ import pandas as pd
 print(config['Authentication']['APIKey'])
 from pybliometrics.scopus import AbstractRetrieval, ScopusSearch, CitationOverview
 
-def bibvis(request):
-    """Responds to any HTTP request.
-    Args:
-        request (flask.Request): HTTP request object.
-    Returns:
-        The response text or any set of values that can be turned into a
-        Response object using
-        `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
-    """
-    request_json = request.get_json()
-    if request.args and 'message' in request.args:
-        return request.args.get('message')
-    elif request_json and 'message' in request_json:
-        return request_json['message']
-    else:
-        return f'Hello World!'
-
 #  pub_year = pub['bib']['pub_year']
 #     pub_citations = pub['num_citations']
 #     if not(pub_year.isdigit()):
@@ -188,58 +171,51 @@ def checkCrossReferences(pubMap):
                 print(i['label'])
                 extraLinks.append({'source_id': i['id'],'target_id':item['id']})
     return extraLinks
-with open('bib.bib') as bibtex_file:
-   bibtex_database = bibtexparser.load(bibtex_file)
-
-for bibentry in bibtex_database.entries:
-    bib_entry_title = bibentry['title'].lower()
-    doc = getScopusDoc(bib_entry_title)
-    matched_pubs.append(doc)
-#     search_query = scholarly.search_pubs(bibentry['title'])
-#     for pub in search_query:
-#         if (pub['gsrank'] > 2): break
-#         pub_title = pub['bib']['title'].lower()
-#         print(fuzz.ratio(bib_entry_title, pub_title))
-#         if (fuzz.ratio(bib_entry_title, pub_title) > 95):
-#             print("yoo")
-#             pub_to_add = extractGsPubData(pub)
-#             #print(pub_to_add)
-#             cited_by_1o = scholarly.citedby(pub)
-#             cited_by_1o_to_add = []
-#             for cited_pub in cited_by_1o:
-#                 firstOrderCitePub = extractGsPubData(cited_pub)
-#                 cited_by_1o_to_add.append(firstOrderCitePub)
-#             pub_to_add["citations"] = cited_by_1o_to_add
-#             pub_to_add["references"] = getReferences(pub_to_add['pub_title'])
-#             matched_pubs.append(pub_to_add)
-#             break
-
-items = []
-links = []
-
-for i, pub in enumerate(matched_pubs):
-    yOffset = i * 100
-    if not(pub):
-        break
-    items.append(extractMapFromPub(pub,yOffset))
-    for citation in pub["citations"]:
-        if not(citation):
-            break
-        items.append(extractMapFromPub(citation,yOffset))
-        links.append({'source_id': citation['uid'],'target_id':pub['uid']})
-    for reference in pub["references"]:
-        if not(reference):
-            break
-        items.append(extractMapFromPub(reference,yOffset))
-        links.append({'source_id': reference['uid'],'target_id':pub['uid']})
-
-extraLinks = checkCrossReferences(items)
-links = links + extraLinks
-print(f"Total pubs: {len(items)}")
-
-vosJson = {'network': {'items': items,'links':links},'config': {}}
 
 
-with open('result.json', 'w') as fp:
-    json.dump(vosJson, fp)
+def bibvis(request):
+    """Responds to any HTTP request.
+    Args:
+        request (flask.Request): HTTP request object.
+    Returns:
+        The response text or any set of values that can be turned into a
+        Response object using
+        `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
+    """
+    request_json = request.get_json()
+    if request.args and 'bib' in request.args:
+       bibtex_database = bibtexparser.load(request.args.get('bib'))
+       for bibentry in bibtex_database.entries:
+           bib_entry_title = bibentry['title'].lower()
+           doc = getScopusDoc(bib_entry_title)
+           matched_pubs.append(doc)
+
+       items = []
+       links = []
+
+       for i, pub in enumerate(matched_pubs):
+           yOffset = i * 100
+           if not(pub):
+               break
+           items.append(extractMapFromPub(pub,yOffset))
+           for citation in pub["citations"]:
+               if not(citation):
+                   break
+               items.append(extractMapFromPub(citation,yOffset))
+               links.append({'source_id': citation['uid'],'target_id':pub['uid']})
+           for reference in pub["references"]:
+               if not(reference):
+                   break
+               items.append(extractMapFromPub(reference,yOffset))
+               links.append({'source_id': reference['uid'],'target_id':pub['uid']})
+
+       extraLinks = checkCrossReferences(items)
+       links = links + extraLinks
+       print(f"Total pubs: {len(items)}")
+
+       vosJson = {'network': {'items': items,'links':links},'config': {}}
+       with open('result.json', 'w') as fp:
+           json.dump(vosJson, fp)
+    else:
+        return f'Something wrong'
 
