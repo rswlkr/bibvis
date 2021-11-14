@@ -32,7 +32,9 @@ def splitEid(eid):
 
 
 def getScopusDoc(title):
+     print(title)
      s = ScopusSearch(query=title)
+     print(s.results)
      df = pd.DataFrame(s.results)
      d = df.loc[df['title'].str.lower() == title]
      if (d.empty):
@@ -172,6 +174,9 @@ def checkCrossReferences(pubMap):
                 extraLinks.append({'source_id': i['id'],'target_id':item['id']})
     return extraLinks
 
+# bibstr =  "@article{singh1997state,title={State of the art in automation of earthmoving},author={Singh, Sanjiv},journal={Journal of Aerospace Engineering},volume={10},number={4},pages={179--188},year={1997},publisher={American Society of Civil Engineers}}"
+# bidb = bibtexparser.loads(bibstr)
+# print(bidb)
 
 def bibvis(request):
     """Responds to any HTTP request.
@@ -183,8 +188,9 @@ def bibvis(request):
         `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
     """
     request_json = request.get_json()
-    if request.args and 'bib' in request.args:
-       bibtex_database = bibtexparser.load(request.args.get('bib'))
+    if len(request_json['bibtex']) > 0:
+       bibtex_database = bibtexparser.loads(request_json['bibtex'])
+       print(bibtex_database)
        for bibentry in bibtex_database.entries:
            bib_entry_title = bibentry['title'].lower()
            doc = getScopusDoc(bib_entry_title)
