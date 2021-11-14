@@ -1,5 +1,5 @@
 /* global NODE_ENV */
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react'
 import { observer } from 'mobx-react-lite';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider, createTheme } from '@material-ui/core/styles';
@@ -32,6 +32,7 @@ import {
 import { getProxyUrl } from 'utils/helpers';
 import { parameterKeys, panelBackgroundColors, visualizationBackgroundColors } from 'utils/variables';
 import * as s from './style';
+import BibEntry from '../BibEntry'
 
 const VOSviewer = observer(({ queryString }) => {
   const clusteringStore = useContext(ClusteringStoreContext);
@@ -201,6 +202,7 @@ const VOSviewer = observer(({ queryString }) => {
           <Fullscreen />
           <Info />
         </div>
+        <BibEntry/>
         <URLPanel />
         <LegendPanel />
         <InfoPanel />

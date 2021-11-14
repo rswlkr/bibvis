@@ -214,8 +214,7 @@ def bibvis(request):
        print(f"Total pubs: {len(items)}")
 
        vosJson = {'network': {'items': items,'links':links},'config': {}}
-       with open('result.json', 'w') as fp:
-           json.dump(vosJson, fp)
+       return vosJson
     else:
         return f'Something wrong'
 
