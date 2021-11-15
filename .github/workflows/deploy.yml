@@ -32,6 +32,7 @@ jobs:
             source_dir: ./api
             credentials: ${{ secrets.GCLOUD }}
       - run: 'echo "$WEBCONFIG" > config.json'
+      - run: cat config.json
       - run: npm ci
       - run: npm run build
       - name: Deploy Web
