@@ -16,12 +16,12 @@ export const controlPanelTabValues = {
 export const panelMargin = 12;
 export const panelPadding = 8;
 export const panelBackgroundColors = {
-  LIGHT: 'white',
+  LIGHT: '#fff',
   DARK: '#212121',
 };
 export const legendPanelMaxWidth = 400;
 export const legendStrokeColors = {
-  LIGHT: 'white',
+  LIGHT: '#fff',
   DARK: '#2f2f2f'
 };
 
@@ -41,7 +41,7 @@ export const zoomScaleFactor = 2;
 export const itemZoomLevel = 3;
 export const minNItems = 3;
 export const visualizationBackgroundColors = {
-  LIGHT: 'white',
+  LIGHT: '#fff',
   DARK: '#131313',
 };
 export const circleColors = {
@@ -64,7 +64,7 @@ export const lineColors = {
 };
 export const labelColors = {
   LIGHT_BACKGROUND: 'black',
-  DARK_BACKGROUND: 'white',
+  DARK_BACKGROUND: '#fff',
   ALPHA_DEFAULT: 0.8,
   ALPHA_HIGHLIGHTED: 0.9,
   ALPHA_DIMMED: 0.3,
