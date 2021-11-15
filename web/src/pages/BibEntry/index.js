@@ -8,10 +8,9 @@ const BibEntry = ({setJsonURL, setBibtexOpen, setBibtex, bibtex}) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const configStore = useContext(ConfigStoreContext);
-  console.log(configStore.apiUrl)
   const submitBibtex = async () => {
     setLoading(true)
-    fetch(configStore.apiUrl,{
+    fetch(configStore.apiUrl || 'https://europe-west2-bibvis.cloudfunctions.net/bibvis',{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
