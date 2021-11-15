@@ -8,33 +8,32 @@ os.environ['PYB_CONFIG_FILE'] = "./config.ini"
 from pybliometrics.scopus.utils import config
 from nanoid import generate
 import pandas as pd
-
-
-print(config['Authentication']['APIKey'])
+from gcloud import storage
+from oauth2client.service_account import ServiceAccountCredentials
 from pybliometrics.scopus import AbstractRetrieval, ScopusSearch, CitationOverview
+from dotenv import load_dotenv
 
-#  pub_year = pub['bib']['pub_year']
-#     pub_citations = pub['num_citations']
-#     if not(pub_year.isdigit()):
-#         return
-# #     if (pub['citedby_url']):
-# #         return
-# #     pub_cite_id = pub['citedby_url'].split('?')[1].split('=')[1].split('&')[0]
-#     pub_title = pub['bib']['title'].lower()
-#     pub_to_add["id"] = generate()
-#     pub_to_add["pub_year"] = pub_year
-# #     pub_to_add["pub_cite_id"] = pub_cite_id
-#     pub_to_add["pub_title"] = pub_title
-#     pub_to_add["num_pub_citations"] = pub_citations
+load_dotenv()
+
+gcloud_credentials = {}
+
+print(os.environ['env'])
+
+if (os.environ['env'] != 'DEV'):
+    gcloud_credentials_dict = {
+        'type': 'service_account',
+        'client_id': os.environ['GCLOUD_CLIENT_ID'],
+        'client_email': os.environ['GCLOUD_CLIENT_EMAIL'],
+        'private_key_id': os.environ['GCLOUD_PRIVATE_KEY_ID'],
+        'private_key' : os.environ['GCLOUD_PRIVATE_KEY']
+    }
+    gcloud_credentials = ServiceAccountCredentials.from_json_keyfile_dict(gcloud_credentials_dict)
 
 def splitEid(eid):
     return eid.split('-')[2]
 
-
 def getScopusDoc(title):
-     print(title)
      s = ScopusSearch(query=title)
-     print(s.results)
      df = pd.DataFrame(s.results)
      d = df.loc[df['title'].str.lower() == title]
      if (d.empty):
@@ -44,7 +43,6 @@ def getScopusDoc(title):
      references = getReferences(doc)
      citations = getCitations(doc)
      dd = {'uid': generate(), 'id': (doc.identifier), 'pub_title': title, 'pub_year': pub_year, 'references': references, 'citations': citations, 'num_pub_citations':len(citations)}
-     print(f"{doc.identifier}, {title}, {pub_year}, refs: {len(references)}, citations: {len(citations)}")
      return dd
 
 def getReferences(doc):
@@ -101,11 +99,6 @@ def getCitations(doc):
     return citations
 
 # test = getScopusDoc("safety first? production pressures and the implications on safety and health")
-
-
-# pg = ProxyGenerator()
-# pg.Tor_Internal(tor_cmd = "tor")
-# scholarly.use_proxy(pg)
 
 matched_pubs = []
 pubsInYearCount = {}
@@ -179,16 +172,24 @@ def checkCrossReferences(pubMap):
 # print(bidb)
 
 def bibvis(request):
-    """Responds to any HTTP request.
-    Args:
-        request (flask.Request): HTTP request object.
-    Returns:
-        The response text or any set of values that can be turned into a
-        Response object using
-        `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
-    """
+    items = []
+    links = []
+    matched_pubs = []
+    if request.method == 'OPTIONS':
+        headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '3600'
+        }
+        return ('', 204, headers)
+
+    # Set CORS headers for the main request
+    headers = {
+        'Access-Control-Allow-Origin': '*'
+    }
     request_json = request.get_json()
-    if len(request_json['bibtex']) > 0:
+    if request_json['bibtex']:
        bibtex_database = bibtexparser.loads(request_json['bibtex'])
        print(bibtex_database)
        for bibentry in bibtex_database.entries:
@@ -196,8 +197,7 @@ def bibvis(request):
            doc = getScopusDoc(bib_entry_title)
            matched_pubs.append(doc)
 
-       items = []
-       links = []
+
 
        for i, pub in enumerate(matched_pubs):
            yOffset = i * 100
@@ -217,10 +217,25 @@ def bibvis(request):
 
        extraLinks = checkCrossReferences(items)
        links = links + extraLinks
+       if (len(items) < 1):
+        return(500)
        print(f"Total pubs: {len(items)}")
 
        vosJson = {'network': {'items': items,'links':links},'config': {}}
-       return vosJson
+       with open('result.json', 'w') as fp:
+           json.dump(vosJson, fp)
+
+       gcloud_storage_client = storage.Client(credentials=gcloud_credentials, project='bibvis')
+       bucket = gcloud_storage_client.get_bucket('bibvis.appspot.com')
+       blob = bucket.blob(f'{generate()}.json')
+       blob.upload_from_filename('./result.json')
+       os.remove('result.json')
+       items = []
+       links = []
+       print(blob.public_url)
+       return ({"jsonUrl": blob.public_url}, 200, headers)
+
     else:
-        return f'Something wrong'
+        return ('Something went wrong', 500, headers)
+
 

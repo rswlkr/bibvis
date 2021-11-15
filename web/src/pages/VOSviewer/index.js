@@ -1,5 +1,5 @@
 /* global NODE_ENV */
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { observer } from 'mobx-react-lite';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider, createTheme } from '@material-ui/core/styles';
@@ -33,6 +33,7 @@ import { getProxyUrl } from 'utils/helpers';
 import { parameterKeys, panelBackgroundColors, visualizationBackgroundColors } from 'utils/variables';
 import * as s from './style';
 import BibEntry from '../BibEntry'
+import Bibtex from '../../components/ui/Bibtex'
 
 const VOSviewer = observer(({ queryString }) => {
   const clusteringStore = useContext(ClusteringStoreContext);
@@ -43,6 +44,9 @@ const VOSviewer = observer(({ queryString }) => {
   const queryStringStore = useContext(QueryStringStoreContext);
   const webworkerStore = useContext(WebworkerStoreContext);
   const vosviewerLogoEl = useRef(null);
+  const [jsonURL, setJsonURL] = useState(null)
+  const [bibtexOpen, setBibtexOpen] = useState(true)
+  const [bibTex, setBibTex] = useState(false)
 
   useEffect(() => {
     queryStringStore.init(queryString);
@@ -57,14 +61,12 @@ const VOSviewer = observer(({ queryString }) => {
     const proxy = (NODE_ENV !== 'development') ? configStore.proxyUrl : undefined;
     let mapURL = getProxyUrl(proxy, queryString[parameterKeys.MAP]);
     let networkURL = getProxyUrl(proxy, queryString[parameterKeys.NETWORK]);
-    let jsonURL = getProxyUrl(proxy, queryString[parameterKeys.JSON]);
     if (NODE_ENV === 'development' && !mapURL && !networkURL && !jsonURL) {
       mapURL = 'data/JOI_2007-2016_co-authorship_map.txt';
       networkURL = 'data/JOI_2007-2016_co-authorship_network.txt';
     } else if (!mapURL && !networkURL && !jsonURL) {
       mapURL = getProxyUrl(proxy, configStore.parameters.map);
       networkURL = getProxyUrl(proxy, configStore.parameters.network);
-      jsonURL = getProxyUrl(proxy, configStore.parameters.json);
     }
 
     if (mapURL || networkURL) {
@@ -75,7 +77,7 @@ const VOSviewer = observer(({ queryString }) => {
       configStore.setUrlPreviewPanelIsOpen(false);
       uiStore.setLoadingScreenIsOpen(false);
     }
-  }, []);
+  }, [jsonURL]);
 
   useEffect(() => {
     visualizationStore.setGetLogoImages(() => ([vosviewerLogoEl.current]));
@@ -194,6 +196,7 @@ const VOSviewer = observer(({ queryString }) => {
           ref={vosviewerLogoEl}
         />
         <div className={`${s.actionIcons(configStore.urlPreviewPanelWidth)} ${configStore.urlPreviewPanel ? s.previewIsOpen : ''}`}>
+          <Bibtex setBibtexOpen={setBibtexOpen}/>
           <Open />
           <Save />
           <Share />
@@ -202,7 +205,9 @@ const VOSviewer = observer(({ queryString }) => {
           <Fullscreen />
           <Info />
         </div>
-        <BibEntry/>
+        {bibtexOpen && (
+          <BibEntry bibtex={bibTex} setBibtex={setBibTex} setBibtexOpen={setBibtexOpen} setJsonURL={setJsonURL} />
+        )}
         <URLPanel />
         <LegendPanel />
         <InfoPanel />

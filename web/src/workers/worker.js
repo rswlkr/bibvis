@@ -185,6 +185,7 @@ function _parseJsonFile(jsonFileOrUrl) {
     } else {
       fetch(jsonFileOrUrl)
         .then(response => {
+          console.log("Fetching as fuck")
           if (!response.ok) {
             if (response.status === 404) {
               throw new Error('Not Found');
@@ -192,6 +193,7 @@ function _parseJsonFile(jsonFileOrUrl) {
               throw new Error(response.statusText);
             }
           }
+          console.log(response)
           return response.text();
         })
         .then(text => {
