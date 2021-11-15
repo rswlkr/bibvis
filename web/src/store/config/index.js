@@ -132,6 +132,7 @@ export default class State {
           },
           proxy_url: '',
           docs_url: '',
+          api_url: '',
         },
         simpleMode: false,
         fullscreen: false,
@@ -198,6 +199,10 @@ export default class State {
     return this.config.docs_url;
   }
 
+  get apiUrl() {
+    return this.config.api_url;
+  }
+
   setSimpleMode(simpleMode) {
     this.simpleMode = simpleMode;
   }
@@ -230,6 +235,7 @@ export default class State {
 
     if (config.proxy_url) this.config.proxy_url = config.proxy_url;
     if (config.docs_url) this.config.docs_url = config.docs_url;
+    if (config.api_url) this.config.api_url = config.api_url;
   }
 
   _recursiveMerge(newValue, initValue) {

@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { CircularProgress } from '@material-ui/core'
 import Snackbar from '@material-ui/core/Snackbar';
+import { ConfigStoreContext } from '../../store/stores'
 
 const BibEntry = ({setJsonURL, setBibtexOpen, setBibtex, bibtex}) => {
   const [bibdata, setbibdata] = useState(bibtex || '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+  const configStore = useContext(ConfigStoreContext);
+  console.log(configStore.apiUrl)
   const submitBibtex = async () => {
     setLoading(true)
-    fetch('http://localhost:8080',{
+    fetch(configStore.apiUrl,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

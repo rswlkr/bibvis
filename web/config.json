@@ -73,5 +73,6 @@
     "network": "",
     "json": ""
   },
-  "docs_url": "https://app.vosviewer.com/docs"
+  "docs_url": "https://app.vosviewer.com/docs",
+  "api_url": "http://localhost:8080"
 }
