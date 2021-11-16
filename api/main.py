@@ -233,14 +233,14 @@ def bibvis(request):
        print(f"Total pubs: {len(items)}")
 
        vosJson = {'network': {'items': items,'links':links},'config': {}}
-       with open('result.json', 'w') as fp:
+       with open(f'{tempfile.gettempdir()}/result.json', 'w') as fp:
            json.dump(vosJson, fp)
 
        gcloud_storage_client = storage.Client(credentials=gcloud_credentials, project='bibvis')
        bucket = gcloud_storage_client.get_bucket('bibvis.appspot.com')
        blob = bucket.blob(f'{generate()}.json')
-       blob.upload_from_filename('./result.json')
-       os.remove('result.json')
+       blob.upload_from_filename(f'{tempfile.gettempdir()}/result.json')
+       os.remove(f'{tempfile.gettempdir()}/result.json')
        items = []
        links = []
        print(blob.public_url)
