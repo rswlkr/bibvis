@@ -12,12 +12,23 @@ from gcloud import storage
 from oauth2client.service_account import ServiceAccountCredentials
 from pybliometrics.scopus import AbstractRetrieval, ScopusSearch, CitationOverview
 from dotenv import load_dotenv
+import tempfile
 
 load_dotenv()
 
 gcloud_credentials = {}
 
 print(os.environ['env'])
+
+config['Directories']['AbstractRetrieval'] = f'{tempfile.gettempdir()}/Scopus/abstract_retrieval'
+config['Directories']['AffiliationSearch'] = f'{tempfile.gettempdir()}/Scopus/affiliation_search'
+config['Directories']['AuthorRetrieval'] = f'{tempfile.gettempdir()}/Scopus/author_retrieval'
+config['Directories']['AuthorSearch'] = f'{tempfile.gettempdir()}/Scopus/author_search'
+config['Directories']['CitationOverview'] = f'{tempfile.gettempdir()}/Scopus/citation_overview'
+config['Directories']['AffiliationRetrieval'] = f'{tempfile.gettempdir()}/Scopus/affiliation_retrieval'
+config['Directories']['ScopusSearch'] = f'{tempfile.gettempdir()}/Scopus/scopus_search'
+config['Directories']['SerialTitle'] = f'{tempfile.gettempdir()}/Scopus/serial_title'
+
 
 if (os.environ['env'] != 'DEV'):
     gcloud_credentials_dict = {
