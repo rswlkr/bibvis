@@ -14,7 +14,9 @@ from pybliometrics.scopus import AbstractRetrieval, ScopusSearch, CitationOvervi
 from dotenv import load_dotenv
 import tempfile
 
-load_dotenv()
+
+if (os.environ['env'] == 'DEV'):
+    load_dotenv()
 
 gcloud_credentials = {}
 
