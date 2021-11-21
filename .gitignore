@@ -1,4 +1,4 @@
 **.bib
 .idea
 .log
-.env
+/.env
