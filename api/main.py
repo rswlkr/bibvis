@@ -40,6 +40,7 @@ if (os.environ['env'] != 'DEV'):
         'private_key_id': os.environ['GCLOUD_PRIVATE_KEY_ID'],
         'private_key' : os.environ['GCLOUD_PRIVATE_KEY'].replace('\\n', '\n')
     }
+    print(gcloud_credentials_dict)
     gcloud_credentials = ServiceAccountCredentials.from_json_keyfile_dict(gcloud_credentials_dict)
 
 def splitEid(eid):
