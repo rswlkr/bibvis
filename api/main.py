@@ -15,12 +15,8 @@ from dotenv import load_dotenv
 import tempfile
 
 
-if (os.environ['env'] == 'DEV'):
-    load_dotenv()
 
 gcloud_credentials = {}
-
-print(os.environ['env'])
 
 config['Directories']['AbstractRetrieval'] = f'{tempfile.gettempdir()}/Scopus/abstract_retrieval'
 config['Directories']['AffiliationSearch'] = f'{tempfile.gettempdir()}/Scopus/affiliation_search'
@@ -32,13 +28,13 @@ config['Directories']['ScopusSearch'] = f'{tempfile.gettempdir()}/Scopus/scopus_
 config['Directories']['SerialTitle'] = f'{tempfile.gettempdir()}/Scopus/serial_title'
 
 
-if (os.environ['env'] != 'DEV'):
+if (config['GOOGLE']['ENV'] != 'DEV'):
     gcloud_credentials_dict = {
         'type': 'service_account',
-        'client_id': os.environ['GCLOUD_CLIENT_ID'],
-        'client_email': os.environ['GCLOUD_CLIENT_EMAIL'],
-        'private_key_id': os.environ['GCLOUD_PRIVATE_KEY_ID'],
-        'private_key' : os.environ['GCLOUD_PRIVATE_KEY']
+        'client_id': config['GOOGLE']['GCLOUD_CLIENT_ID'],
+        'client_email': config['GOOGLE']['GCLOUD_CLIENT_EMAIL'],
+        'private_key_id':config['GOOGLE']['GCLOUD_PRIVATE_KEY_ID'],
+        'private_key' : config['GOOGLE']['GCLOUD_PRIVATE_KEY'].replace('\\n', '\n')
     }
     print(gcloud_credentials_dict)
     gcloud_credentials = ServiceAccountCredentials.from_json_keyfile_dict(gcloud_credentials_dict)
