@@ -38,7 +38,7 @@ if (os.environ['env'] != 'DEV'):
         'client_id': os.environ['GCLOUD_CLIENT_ID'],
         'client_email': os.environ['GCLOUD_CLIENT_EMAIL'],
         'private_key_id': os.environ['GCLOUD_PRIVATE_KEY_ID'],
-        'private_key' : os.environ['GCLOUD_PRIVATE_KEY'].replace('\\n', '\n')
+        'private_key' : os.environ['GCLOUD_PRIVATE_KEY']
     }
     print(gcloud_credentials_dict)
     gcloud_credentials = ServiceAccountCredentials.from_json_keyfile_dict(gcloud_credentials_dict)
