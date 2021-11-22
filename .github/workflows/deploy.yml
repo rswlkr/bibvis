@@ -31,7 +31,7 @@ jobs:
             runtime: python37
             source_dir: ./api
             credentials: ${{ secrets.GCLOUD }}
-            env_var: env=${{secrects.ENV}},GCLOUD_CLIENT_EMAIL=${{secrects.GCLOUD_CLIENT_EMAIL}},GCLOUD_CLIENT_ID=${{secrects.GCLOUD_CLIENT_ID}},GCLOUD_PRIVATE_KEY_ID=${{secrets.GCLOUD_PRIVATE_KEY_ID}},GCLOUD_PRIVATE_KEY=${{secrects.GCLOUD_PRIVATE_KEY}}
+            env_vars: env=${{secrects.ENV}},GCLOUD_CLIENT_EMAIL=${{secrects.GCLOUD_CLIENT_EMAIL}},GCLOUD_CLIENT_ID=${{secrects.GCLOUD_CLIENT_ID}},GCLOUD_PRIVATE_KEY_ID=${{secrets.GCLOUD_PRIVATE_KEY_ID}},GCLOUD_PRIVATE_KEY=${{secrects.GCLOUD_PRIVATE_KEY}}
       - run: 'echo "$WEBCONFIG" > config.json'
       - run: cat config.json
       - run: npm ci
