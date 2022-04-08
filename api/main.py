@@ -1,7 +1,7 @@
-from scholarly import scholarly
+# from scholarly import scholarly
 from thefuzz import fuzz
 import bibtexparser
-from scholarly import scholarly, ProxyGenerator
+# from scholarly import scholarly, ProxyGenerator
 import json
 import os
 os.environ['PYB_CONFIG_FILE'] = "./config.ini"
